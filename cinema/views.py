@@ -12,7 +12,6 @@ from rest_framework.viewsets import GenericViewSet
 
 from cinema.models import Genre, Actor, CinemaHall, Movie, MovieSession, Order
 from cinema.permissions import IsAdminOrIfAuthenticatedReadOnly
-
 from cinema.serializers import (
     GenreSerializer,
     ActorSerializer,
@@ -153,8 +152,8 @@ class MovieSessionViewSet(viewsets.ModelViewSet):
         .select_related("movie", "cinema_hall")
         .annotate(
             tickets_available=(
-                F("cinema_hall__rows") * F("cinema_hall__seats_in_row")
-                - Count("tickets")
+                    F("cinema_hall__rows") * F("cinema_hall__seats_in_row")
+                    - Count("tickets")
             )
         )
     )
@@ -196,8 +195,8 @@ class MovieSessionViewSet(viewsets.ModelViewSet):
                 "date",
                 type=OpenApiTypes.DATE,
                 description=(
-                    "Filter by datetime of MovieSession "
-                    "(ex. ?date=2022-10-23)"
+                        "Filter by datetime of MovieSession "
+                        "(ex. ?date=2022-10-23)"
                 ),
             ),
         ]
@@ -234,4 +233,3 @@ class OrderViewSet(
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
-        
